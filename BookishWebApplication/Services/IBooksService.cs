@@ -17,7 +17,7 @@ namespace BookishWebApplication.Services
         public IEnumerable<Book> GetAllBooks()
         {
             using var connection = new NpgsqlConnection(connectionString);
-            return connection.Query<Book>("SELECT * FROM books");
+            return connection.Query<Book>("SELECT * FROM book");
         }
     }
 }
