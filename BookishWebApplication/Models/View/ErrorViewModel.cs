@@ -1,6 +1,4 @@
-using System;
-
-namespace BookishWebApplication.Models
+namespace BookishWebApplication.Models.View
 {
     public class ErrorViewModel
     {
