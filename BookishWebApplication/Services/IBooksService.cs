@@ -8,6 +8,7 @@ namespace BookishWebApplication.Services
     public interface IBooksService
     {
         IEnumerable<Book> GetAllBooks();
+        IEnumerable<Book> SearchBooks(string query);
     }
 
     public class BooksService : IBooksService
@@ -19,7 +20,17 @@ namespace BookishWebApplication.Services
         public IEnumerable<Book> GetAllBooks()
         {
             using var connection = new NpgsqlConnection(connectionString);
-            return connection.Query<Book>("SELECT * FROM book");
+            return connection.Query<Book>("SELECT * FROM book ORDER BY title");
+        }
+        
+
+        public IEnumerable<Book> SearchBooks(string searchString)
+        {
+            var test = "%" + searchString + "%";
+            var parameters = new DynamicParameters( new { SearchTitle = test } );
+            var sql = "SELECT * FROM book WHERE title LIKE @SearchTitle";
+            using var connection = new NpgsqlConnection(connectionString);
+            return connection.Query<Book>(sql, parameters);
         }
     }
 }

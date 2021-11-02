@@ -1,0 +1,26 @@
+@model BookishWebApplication.Models.View.BooksViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Books</h1>
+    <p>yeah books.</p>
+    
+    @{
+        foreach (var book in Model.Books)
+        {
+            <p>Book: @book.Title</p>
+            if (book.PublicationYear == 0)
+            {
+                <p>Published: Unknown</p>
+            }
+            else
+            {
+                <p>Published: @book.PublicationYear</p>
+            }
+            <br/>
+        }
+    }
+    
+</div>
