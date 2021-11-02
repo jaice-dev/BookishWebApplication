@@ -25,7 +25,7 @@ namespace BookishWebApplication.Controllers
         [HttpGet("search")]
         public IActionResult Search()
         {
-            var books = _booksService.SearchBooks("potter");
+            var books = _booksService.SearchBooks("Potter");
             var viewModel = new BooksViewModel {Books = books};
             
             return View(viewModel);
