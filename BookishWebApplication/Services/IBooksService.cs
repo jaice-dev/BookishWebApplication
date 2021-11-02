@@ -12,7 +12,9 @@ namespace BookishWebApplication.Services
 
     public class BooksService : IBooksService
     {
-        private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
+        // private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
+        private const string connectionString = "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
+
 
         public IEnumerable<Book> GetAllBooks()
         {

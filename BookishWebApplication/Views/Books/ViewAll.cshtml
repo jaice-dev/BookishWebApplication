@@ -11,7 +11,14 @@
         foreach (var book in Model.Books)
         {
             <p>Book: @book.Title</p>
-            <p>Published: @book.PublicationYear</p>
+            if (book.PublicationYear == 0)
+            {
+                <p>Published: Unknown</p>
+            }
+            else
+            {
+                <p>Published: @book.PublicationYear</p>
+            }
             <br/>
         }
     }
