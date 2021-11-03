@@ -15,7 +15,7 @@ namespace BookishWebApplication.Services
     public class BooksService : IBooksService
     {
         // private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
-        private const string connectionString = "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
+        private const string ConnectionString = "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
 
 
         public IEnumerable<Book> GetAllBooks()
@@ -23,7 +23,7 @@ namespace BookishWebApplication.Services
             var getBooksQuery =
                 "SELECT book.id as bookId, title, publicationyear, isbn, author.id as authorId, firstname, lastname FROM bookauthor, book, author WHERE bookauthor.bookid = book.id AND bookauthor.authorid = author.id";
             
-            return GetDatabaseResponse(getBooksQuery, null);
+            return GetDatabaseBookResponse(getBooksQuery, null);
         }
         
         public IEnumerable<Book> SearchBooks(string searchString)
@@ -35,15 +35,15 @@ namespace BookishWebApplication.Services
                 var searchBooksQuery =
                     "SELECT book.id as bookId, title, publicationyear, isbn, author.id as authorId, firstname, lastname FROM bookauthor, book, author WHERE bookauthor.bookid = book.id AND bookauthor.authorid = author.id AND lower(title) LIKE lower(@SearchTitle)";
 
-                return GetDatabaseResponse(searchBooksQuery, searchParameters);
+                return GetDatabaseBookResponse(searchBooksQuery, searchParameters);
             }
 
             return null;
         }
 
-        private static IEnumerable<Book> GetDatabaseResponse(string searchSql, DynamicParameters parameters = null)
+        private static IEnumerable<Book> GetDatabaseBookResponse(string searchSql, DynamicParameters parameters = null)
         {
-            using var connection = new NpgsqlConnection(connectionString);
+            using var connection = new NpgsqlConnection(ConnectionString);
             
             var countsByBookId = GetPrintCountDict(connection);
 
