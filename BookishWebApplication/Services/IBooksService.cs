@@ -20,7 +20,9 @@ namespace BookishWebApplication.Services
         public IEnumerable<Book> GetAllBooks()
         {
             using var connection = new NpgsqlConnection(connectionString);
-            return connection.Query<Book>("SELECT * FROM book ORDER BY title");
+            return connection.Query<Book>(@"SELECT * from bookauthor 
+                                                JOIN book on bookauthor.bookid = book.Id
+                                                JOIN author on bookauthor.authorid = author.id");
         }
         
 
