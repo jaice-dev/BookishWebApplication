@@ -20,14 +20,19 @@ namespace BookishWebApplication.Services
 
         public IEnumerable<Book> GetAllBooks()
         {
+            using var connection = new NpgsqlConnection(connectionString);
+
+            var countPrintsQuery = "SELECT bookId, COUNT(id) FROM print GROUP BY bookId";
+
+            var countsByBookId = connection.Query(countPrintsQuery).ToDictionary(row => (int) row.bookid, row => (int) row.count);
+
             var bookDictionary = new Dictionary<int, Book>();
 
-            var sql =
+            var getBooksQuery =
                 "SELECT book.id as bookId, title, publicationyear, isbn, author.id as authorId, firstname, lastname FROM bookauthor, book, author WHERE bookauthor.bookid = book.id AND bookauthor.authorid = author.id";
 
-            using var connection = new NpgsqlConnection(connectionString);
             return connection.Query<Book, Author, Book>(
-                    sql,
+                    getBooksQuery,
                     (book, author) =>
                     {
                         Book currentBook;
@@ -36,6 +41,7 @@ namespace BookishWebApplication.Services
                         {
                             currentBook = book;
                             currentBook.Authors = new List<Author>();
+                            currentBook.PrintCount = countsByBookId.ContainsKey(currentBook.BookId) ? countsByBookId[currentBook.BookId] : 0;
                             bookDictionary.Add(currentBook.BookId, currentBook);
                         }
                         
