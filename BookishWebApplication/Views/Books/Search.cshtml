@@ -6,6 +6,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Book Search</h1>
+    
+    <form class="input-group mb-3" action="search">
+        <input name="searchString" id="searchString" type="text" class="form-control" placeholder="Enter book title to search" aria-label="Enter book title to search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Search"/>
+        </div>
+    </form>
 
 @{
     if (string.IsNullOrEmpty(Model.SearchString))

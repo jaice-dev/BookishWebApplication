@@ -4,9 +4,16 @@
 }
 
 <div class="text-center">
+    <form class="input-group mb-3" action="books/search">
+        <input name="searchString" id="searchString" type="text" class="form-control" placeholder="Enter book title to search" aria-label="Enter book title to search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Search"/>
+        </div>
+    </form>
+    
     <h1 class="display-4">Books</h1>
     <a asp-controller="books" asp-action="Search">Search for a book</a>
-    
+
     @{
         foreach (var book in Model.Books)
         {
@@ -22,5 +29,5 @@
             <br/>
         }
     }
-    
+
 </div>
