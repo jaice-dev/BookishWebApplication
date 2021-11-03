@@ -1,13 +1,18 @@
-@model BookishWebApplication.Models.View.BooksViewModel
+@model BookishWebApplication.Models.View.SearchViewModel
+
 @{
     ViewData["Title"] = "Search";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Books</h1>
-    <p>yeah books.</p>
+    <h1 class="display-4">Book Search</h1>
+    <p>Searching for: @Model.BookTitle</p>
     
     @{
+        if (!Model.Books.Any())
+        {
+            <p>No books with title @Model.BookTitle found</p>
+        }
         foreach (var book in Model.Books)
         {
             <p>Book: @book.Title</p>

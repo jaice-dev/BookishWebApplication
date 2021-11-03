@@ -26,9 +26,8 @@ namespace BookishWebApplication.Services
 
         public IEnumerable<Book> SearchBooks(string searchString)
         {
-            var test = "%" + searchString + "%";
-            var parameters = new DynamicParameters( new { SearchTitle = test } );
-            var sql = "SELECT * FROM book WHERE title LIKE @SearchTitle";
+            var parameters = new DynamicParameters( new { SearchTitle = "%" + searchString + "%" } );
+            var sql = "SELECT * FROM book WHERE lower(title) LIKE lower(@SearchTitle)";
             using var connection = new NpgsqlConnection(connectionString);
             return connection.Query<Book>(sql, parameters);
         }
