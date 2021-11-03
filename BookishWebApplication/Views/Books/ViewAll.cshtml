@@ -12,15 +12,15 @@
     </form>
     
     <h1 class="display-4">Books</h1>
-    <a asp-controller="books" asp-action="Search">Search for a book</a>
 
-    @{
-        foreach (var book in Model.Books)
-        {
-            <p>Book: @book.Title</p>
-            <p>Author: @book.FirstName @book.LastName</p>
-            <p>Published: @(book.PublicationYear == 0 ? "Unknown" : book.PublicationYear)</p>
-            <br/>
-        }
-    }
+    @* @{ *@
+    @*     foreach (var book in Model.Books) *@
+    @*     { *@
+    @*         <br/> *@
+    @*         <p>Book: @book.Title</p> *@
+    @*         <p>Author: @book.FirstName @book.LastName</p> *@
+    @*         <p>Published: @(book.PublicationYear == 0 ? "Unknown" : book.PublicationYear)</p> *@
+    @*         <br/> *@
+    @*     } *@
+    @* } *@
 </div>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BookishWebApplication.Models.Database
 {
@@ -8,7 +9,6 @@ namespace BookishWebApplication.Models.Database
         public string Title { get; set; }
         public short PublicationYear { get; set; }
         public string Isbn { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public List<Author> Authors { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using BookishWebApplication.Models.Database;
 using Dapper;
 using Npgsql;
@@ -19,10 +20,32 @@ namespace BookishWebApplication.Services
 
         public IEnumerable<Book> GetAllBooks()
         {
+            var bookDictionary = new Dictionary<int, Book>();
+
+            var sql =
+                "SELECT * from bookauthor JOIN book on bookauthor.bookid = book.Id JOIN author on bookauthor.authorid = author.id";
+
             using var connection = new NpgsqlConnection(connectionString);
-            return connection.Query<Book>(@"SELECT * from bookauthor 
-                                                JOIN book on bookauthor.bookid = book.Id
-                                                JOIN author on bookauthor.authorid = author.id");
+            return connection.Query<BookAuthor, Book, Author, Book>(
+                    sql,
+                    (bookAuthor, book, author) =>
+                    {
+                        Book currentBook;
+
+                        if (!bookDictionary.TryGetValue(book.Id, out currentBook))
+                        {
+                            currentBook = book;
+                            currentBook.Authors = new List<Author>();
+                            bookDictionary.Add(currentBook.Id, currentBook);
+                        }
+                        
+                        currentBook.Authors.Add(author);
+
+                        return currentBook;
+                    },
+                    splitOn: "authorid"
+                )
+                .Distinct();
         }
         
 
