@@ -31,7 +31,10 @@ namespace BookishWebApplication.Services
             if (!string.IsNullOrEmpty(searchString))
             {
                 var parameters = new DynamicParameters( new { SearchTitle = "%" + searchString + "%" } );
-                var sql = "SELECT * FROM book WHERE lower(title) LIKE lower(@SearchTitle)";
+                var sql = @"SELECT * FROM bookauthor
+                            JOIN book on bookauthor.bookid = book.Id
+                            JOIN author on bookauthor.authorid = author.id
+                            WHERE lower(title) LIKE lower(@SearchTitle)";
                 using var connection = new NpgsqlConnection(connectionString);
                 return connection.Query<Book>(sql, parameters);
             }
