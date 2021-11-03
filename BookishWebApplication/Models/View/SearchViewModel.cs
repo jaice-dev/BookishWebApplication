@@ -6,6 +6,6 @@ namespace BookishWebApplication.Models.View
 {
     public class SearchViewModel : BooksViewModel
     {
-        public string BookTitle { get; set;  }
+        public string SearchString { get; set;  }
     }
 }

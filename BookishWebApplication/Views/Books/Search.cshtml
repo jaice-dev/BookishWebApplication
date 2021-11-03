@@ -6,15 +6,23 @@
 
 <div class="text-center">
     <h1 class="display-4">Book Search</h1>
-    <p>Searching for: @Model.BookTitle</p>
-    
-    @{
-        if (!Model.Books.Any())
-        {
-            <p>No books with title @Model.BookTitle found</p>
-        }
+
+@{
+    if (string.IsNullOrEmpty(Model.SearchString))
+    {
+        <p>@Model.SearchString</p>
+        <p>Please search for a book</p>
+    }
+    else if (!Model.Books.Any())
+    {
+        <p>No books with title @Model.SearchString found</p>
+    }
+    else
+    {
         foreach (var book in Model.Books)
         {
+            <p>Searching for: @Model.SearchString</p>
+
             <p>Book: @book.Title</p>
             if (book.PublicationYear == 0)
             {
@@ -25,7 +33,9 @@
                 <p>Published: @book.PublicationYear</p>
             }
             <br/>
+
         }
+
     }
-    
+}
 </div>

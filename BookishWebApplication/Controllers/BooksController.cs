@@ -21,12 +21,12 @@ namespace BookishWebApplication.Controllers
             
             return View(viewModel);
         }
-        
-        [HttpGet("search/{bookTitle}")]
-        public IActionResult Search(string bookTitle)
+
+        [HttpGet("search")]
+        public IActionResult Search(string searchString)
         {
-            var books = _booksService.SearchBooks(bookTitle);
-            var viewModel = new SearchViewModel {Books = books, BookTitle = bookTitle};
+            var books = _booksService.SearchBooks(searchString);
+            var viewModel = new SearchViewModel {Books = books, SearchString = searchString};
             return View(viewModel);
         }
     }
