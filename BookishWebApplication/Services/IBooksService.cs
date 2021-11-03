@@ -23,27 +23,27 @@ namespace BookishWebApplication.Services
             var bookDictionary = new Dictionary<int, Book>();
 
             var sql =
-                "SELECT * from bookauthor JOIN book on bookauthor.bookid = book.Id JOIN author on bookauthor.authorid = author.id";
+                "SELECT book.id as bookId, title, publicationyear, isbn, author.id as authorId, firstname, lastname FROM bookauthor, book, author WHERE bookauthor.bookid = book.id AND bookauthor.authorid = author.id";
 
             using var connection = new NpgsqlConnection(connectionString);
-            return connection.Query<BookAuthor, Book, Author, Book>(
+            return connection.Query<Book, Author, Book>(
                     sql,
-                    (bookAuthor, book, author) =>
+                    (book, author) =>
                     {
                         Book currentBook;
 
-                        if (!bookDictionary.TryGetValue(book.Id, out currentBook))
+                        if (!bookDictionary.TryGetValue(book.BookId, out currentBook))
                         {
                             currentBook = book;
                             currentBook.Authors = new List<Author>();
-                            bookDictionary.Add(currentBook.Id, currentBook);
+                            bookDictionary.Add(currentBook.BookId, currentBook);
                         }
                         
                         currentBook.Authors.Add(author);
 
                         return currentBook;
                     },
-                    splitOn: "authorid"
+                    splitOn: "authorId"
                 )
                 .Distinct();
         }

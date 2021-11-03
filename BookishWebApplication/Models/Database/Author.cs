@@ -5,7 +5,7 @@ namespace BookishWebApplication.Models.Database
 {
     public class Author
     {
-        public int Id { get; set; }
+        public int AuthorId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }

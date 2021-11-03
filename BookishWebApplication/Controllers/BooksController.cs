@@ -1,4 +1,5 @@
-﻿using BookishWebApplication.Models.View;
+﻿using System;
+using BookishWebApplication.Models.View;
 using BookishWebApplication.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BookishWebApplication.Controllers
         public IActionResult ViewAll()
         {
             var books = _booksService.GetAllBooks();
+            Console.WriteLine(books);
             var viewModel = new BooksViewModel {Books = books};
             
             return View(viewModel);
