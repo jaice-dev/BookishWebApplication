@@ -15,25 +15,28 @@ namespace BookishWebApplication.Controllers
     [Route("/author")]
     public class AuthorController : Controller
     {
+        private readonly IBooksService _booksService;
         private readonly IAuthorService _authorService;
-        
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(IBooksService booksService, IAuthorService authorService)
         {
+            _booksService = booksService;
             _authorService = authorService;
         }
+        
         [HttpGet("")]
         public IActionResult ViewAllAuthorsPage()
         {
             var authors = _authorService.GetAllAuthors();
-            var viewModel = new AuthorViewModel {Authors = authors};
+            var viewModel = new AuthorsViewModel {Authors = authors};
             return View(viewModel);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult ViewAuthorPage(int id)
+        [HttpGet("{authorId}")]
+        public IActionResult ViewAuthorPage(int authorId)
         {
-            var author = _authorService.GetAuthor(id);
-            var viewModel = new AuthorViewModel {Authors = author};
+            var booksByAuthor = _booksService.GetBooksByAuthor(authorId);
+            var author = _authorService.GetAuthor(authorId);
+            var viewModel = new AuthorViewModel {Author = author, BooksByAuthor = booksByAuthor};
             return View(viewModel);
         }
         [HttpGet("create")]

@@ -4,7 +4,7 @@ using BookishWebApplication.Models.Database;
 
 namespace BookishWebApplication.Models.View
 {
-    public class AuthorViewModel
+    public class AuthorsViewModel
     {
         public IEnumerable<Author> Authors { get; set; }
     }

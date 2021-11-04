@@ -4,21 +4,14 @@
 }
 
 <div class="text-center">
-    
-    @{
-        <h1> Author Page</h1>
-        foreach (var author in Model.Authors)
+    <h1> Author Page</h1>
+    @if (Model.Author.FirstName != null)
         {
-            if (author.FirstName != null)
-            {
-                <p>Id: @author.AuthorId</p>
-                <p>Name: @author.FirstName @author.LastName</p>
-            }
-            else
-            {
-                <p>Author: No authors added</p>
-            }
-         
+            <p>Id: @Model.Author.AuthorId</p>
+            <p>Name: @Model.Author.FirstName @Model.Author.LastName</p>
         }
-    }
+        else
+        {
+            <p>Author: No authors added</p>
+        }
 </div>

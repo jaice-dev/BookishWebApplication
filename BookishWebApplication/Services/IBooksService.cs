@@ -10,12 +10,13 @@ namespace BookishWebApplication.Services
     public interface IBooksService
     {
         IEnumerable<Book> GetAllBooks();
+        IEnumerable<Book> GetBooksByAuthor(int authorId);
         IEnumerable<Book> SearchBooks(string query);
-        IEnumerable<Book> GetBook(int id);
+        Book GetBook(int id);
         int CreateBook(CreateBookModel newBook);
         void CreateAuthor(CreateAuthorModel newAuthor);
         void CreateBookCopy(CreateBookCopyModel newCopy);
-        void AddAuthorToBook(CreateBookCopyModel newCopy);
+        void AddAuthorToBook(BookAuthor bookAuthor);
 
     }
 
@@ -24,7 +25,7 @@ namespace BookishWebApplication.Services
         // private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
         private const string ConnectionString = "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
 
-        public IEnumerable<Book> GetBook(int searchId)
+        public Book GetBook(int searchId)
         {
             var searchParameters = new DynamicParameters(new {SearchId = searchId});
             
@@ -32,9 +33,21 @@ namespace BookishWebApplication.Services
                 @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
             from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid
             LEFT OUTER JOIN author on authorid = author.id where book.id = @SearchId;";
+
+            return GetDatabaseBookResponse(getBooksQuery, searchParameters).First();
+        }
+        
+        public IEnumerable<Book> GetBooksByAuthor(int authorId)
+        {
+            var searchParameters = new DynamicParameters(new {AuthorId = authorId});
+            var getBooksQuery =
+                @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
+            from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid
+            LEFT OUTER JOIN author on authorid = author.id WHERE bookauthor.authorid = @AuthorId;";
             
             return GetDatabaseBookResponse(getBooksQuery, searchParameters);
         }
+
         
         public IEnumerable<Book> GetAllBooks()
         {
@@ -141,18 +154,21 @@ namespace BookishWebApplication.Services
             }
         }
         
-        public async void AddAuthorToBook(CreateBookCopyModel newBook)
+        public async void AddAuthorToBook(BookAuthor bookAuthor)
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
                 var sqlStatement =
-                    @"WITH book_key AS (SELECT id from book where title = @Title),
- author_key as (SELECT id from author WHERE (firstname = @FirstName AND lastname = @LastName)) 
-INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";
-                await connection.ExecuteAsync(sqlStatement, newBook);
+                    @"INSERT INTO bookauthor (bookid, authorid) VALUES (@BookId, @AuthorId)";
+                
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, bookAuthor);
             }
         }
         
     }
 }
+
+// @"WITH book_key AS (SELECT id from book where title = @Title),
+// author_key as (SELECT id from author WHERE (firstname = @FirstName AND lastname = @LastName)) 
+// INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BookishWebApplication.Models.Database.Create;
 using BookishWebApplication.Models.View;
 using BookishWebApplication.Services;
@@ -10,9 +13,11 @@ namespace BookishWebApplication.Controllers
     public class BooksController : Controller
     {
         private readonly IBooksService _booksService;
-        public BooksController(IBooksService booksService)
+        private readonly IAuthorService _authorService;
+        public BooksController(IBooksService booksService, IAuthorService authorService)
         {
             _booksService = booksService;
+            _authorService = authorService;
         }
 
         [HttpGet("")]
@@ -29,15 +34,19 @@ namespace BookishWebApplication.Controllers
         public IActionResult ViewBookPage(int id)
         {
             var book = _booksService.GetBook(id);
-            var viewModel = new BooksViewModel {Books = book};
+            var authors = _authorService.GetAllAuthors();
+            var bookAuthor = new BookAuthor {BookId = book.BookId};
+            var viewModel = new BookViewModel {Book = book, AllAuthors = authors, BookAuthor = bookAuthor};
             return View(viewModel);
         }
 
         [HttpGet("search")]
-        public IActionResult SearchBooksPage(string searchString)
+        public IActionResult SearchBooksResultsPage(string searchString)
         {
+            var authors = _authorService.GetAllAuthors();
             var books = _booksService.SearchBooks(searchString);
-            var viewModel = new SearchViewModel {Books = books, SearchString = searchString};
+            var bookAuthors= books.Select(book => new BookAuthor() {BookId = book.BookId});
+            var viewModel = new SearchBooksViewModel {Books = books, AllAuthors = authors, BookAuthors = bookAuthors, SearchString = searchString};
             return View(viewModel);
         }
         
@@ -74,10 +83,10 @@ namespace BookishWebApplication.Controllers
         }
         
         [HttpPost("create/addAuthorToBook")]
-        public IActionResult AddAuthorToBook(CreateBookCopyModel newCopy)
+        public IActionResult AddAuthorToBook(BookAuthor bookAuthor)
         {
-            _booksService.AddAuthorToBook(newCopy);
-            return RedirectToAction("AddAuthorToBookPage");
+            _booksService.AddAuthorToBook(bookAuthor);
+            return RedirectToAction("ViewBookPage", new { id = bookAuthor.BookId });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
 using Dapper;
@@ -11,7 +12,7 @@ namespace BookishWebApplication.Services
     {
         // IEnumerable<Author> GetAuthor(int id);
         IEnumerable<Author> GetAllAuthors();
-        IEnumerable<Author> GetAuthor(int id);
+        Author GetAuthor(int id);
         int CreateAuthor(CreateAuthorModel newAuthor);
 
     }
@@ -22,10 +23,6 @@ namespace BookishWebApplication.Services
         // private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
         private const string ConnectionString =
             "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
-        // public IEnumerable<Author> GetAuthor(int id)
-        // {
-        //     
-        // }
 
         public IEnumerable<Author> GetAllAuthors()
         {
@@ -37,7 +34,7 @@ namespace BookishWebApplication.Services
             return connection.Query<Author>(getAuthorsQuery);
         }
         
-        public IEnumerable<Author> GetAuthor(int id)
+        public Author GetAuthor(int id)
         {
             var searchParameters = new DynamicParameters(new {SearchId = id});
             
@@ -46,7 +43,7 @@ namespace BookishWebApplication.Services
 
             using var connection = new NpgsqlConnection(ConnectionString);
 
-            return connection.Query<Author>(getAuthorsQuery, searchParameters);
+            return connection.Query<Author>(getAuthorsQuery, searchParameters).First();
         }
         
         public int CreateAuthor(CreateAuthorModel newAuthor)
