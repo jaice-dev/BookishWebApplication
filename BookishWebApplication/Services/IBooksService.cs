@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
 using Dapper;
@@ -12,7 +13,7 @@ namespace BookishWebApplication.Services
         IEnumerable<Book> GetAllBooks();
         IEnumerable<Book> SearchBooks(string query);
         IEnumerable<Book> GetBook(int id);
-        void CreateBook(CreateBookModel newBook);
+        int CreateBook(CreateBookModel newBook);
         void CreateAuthor(CreateAuthorModel newAuthor);
         void CreateBookCopy(CreateBookCopyModel newCopy);
         void AddAuthorToBook(CreateBookCopyModel newCopy);
@@ -109,7 +110,7 @@ namespace BookishWebApplication.Services
             return countsByBookId;
         }
 
-        public async void CreateBook(CreateBookModel newBook)
+        public int CreateBook(CreateBookModel newBook)
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
@@ -117,10 +118,10 @@ namespace BookishWebApplication.Services
                 {
                     newBook.PublicationYear = null;
                 }
-                await connection.OpenAsync();
                 var sqlStatement =
-                    @"INSERT INTO book (title, publicationyear, isbn) VALUES (@Title, @PublicationYear, @Isbn);";
-                await connection.ExecuteAsync(sqlStatement, newBook);
+                    @"INSERT INTO book (title, publicationyear, isbn) VALUES (@Title, @PublicationYear, @Isbn) RETURNING id";
+                var result = connection.QuerySingle<int>(sqlStatement, newBook);
+                return result;
             }
         }
         

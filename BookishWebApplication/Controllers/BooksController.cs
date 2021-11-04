@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
 using BookishWebApplication.Models.View;
@@ -51,8 +52,8 @@ namespace BookishWebApplication.Controllers
         [HttpPost("create/book")]
         public IActionResult CreateBook(CreateBookModel newBook)
         {
-            _booksService.CreateBook(newBook);
-            return RedirectToAction("CreateBookAuthorPage");
+            var bookId =  _booksService.CreateBook(newBook);
+            return RedirectToAction("ViewBookPage", new { id = bookId});
         }
         
         [HttpPost("create/author")]
