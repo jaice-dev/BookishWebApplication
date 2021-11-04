@@ -1,7 +1,6 @@
-@using BookishWebApplication.Models.Database
 @model BookishWebApplication.Models.View.BooksViewModel
 @{
-    ViewData["Title"] = "Books";
+    ViewData["Title"] = "Book";
 }
 
 <div class="text-center">
@@ -25,15 +24,7 @@
         {
             <br/>
             <p>Book: @book.Title</p>
-
-            if (book.Authors.First() != null)
-            {
-                <p>Author: @(String.Join(", ", book.Authors.Select(author => $"{author.FirstName} {author.LastName}")))</p>
-            }
-            else
-            {
-                <p>Author: No authors added</p>
-            }
+            <p>Author: @(String.Join(", ", book.Authors.Select(author => $"{author.FirstName} {author.LastName}")))</p>
             <p>Published: @(book.PublicationYear == 0 ? "Unknown" : book.PublicationYear)</p>
             <p>Copies available: @book.PrintCount</p>
             <br/>

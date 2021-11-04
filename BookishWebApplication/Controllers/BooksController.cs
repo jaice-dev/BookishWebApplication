@@ -25,6 +25,14 @@ namespace BookishWebApplication.Controllers
             
             return View(viewModel);
         }
+        
+        // [HttpGet("{id}")]
+        // public IActionResult ViewBookPage(int id)
+        // {
+        //     var book = _booksService.GetBook(id);
+        //     var viewModel = new BookViewModel {Book = book};
+        //     return View(viewModel);
+        // }
 
         [HttpGet("search")]
         public IActionResult SearchBooksPage(string searchString)
