@@ -21,6 +21,13 @@ namespace BookishWebApplication.Controllers
         {
             _authorService = authorService;
         }
+        [HttpGet("")]
+        public IActionResult ViewAllAuthorsPage()
+        {
+            var authors = _authorService.GetAllAuthors();
+            var viewModel = new AuthorViewModel {Authors = authors};
+            return View(viewModel);
+        }
 
         [HttpGet("{id}")]
         public IActionResult ViewAuthorPage(int id)
