@@ -22,19 +22,19 @@ namespace BookishWebApplication.Controllers
             _authorService = authorService;
         }
 
-        [HttpGet("")]
-        public IActionResult ViewAuthorPage()
+        [HttpGet("{id}")]
+        public IActionResult ViewAuthorPage(int id)
         {
-            var author = _authorService.GetAllAuthors();
+            var author = _authorService.GetAuthor(id);
             var viewModel = new AuthorViewModel {Authors = author};
             return View(viewModel);
         }
         
-        // [HttpPost("create")]
-        // public IActionResult CreateAuthor(CreateAuthorModel newAuthor)
-        // {
-        //     _authorService.CreateAuthor(newAuthor);
-        //     return RedirectToAction("CreateBookAuthorPage");
-        // }
+        [HttpPost("create")]
+        public IActionResult CreateAuthor(CreateAuthorModel newAuthor)
+        {
+            var authorId = _authorService.CreateAuthor(newAuthor);
+            return RedirectToAction("ViewAuthorPage", new {id = authorId});
+        }
     }
 }
