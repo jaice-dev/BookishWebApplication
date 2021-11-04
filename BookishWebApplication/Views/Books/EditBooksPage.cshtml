@@ -1,0 +1,37 @@
+﻿@model BookishWebApplication.Models.View.SearchViewModel
+
+@{
+    ViewData["Title"] = "Edit Books";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Edit Books</h1>
+    
+    <div class="post-form-container">
+        <form method = "post" action="/books/create">
+            <fieldset>
+                <legend>Create a Book</legend>
+                <label for="Title">Title</label><br/>
+                <input type="text" id="Title" name="Title" alt="book title input"/><br/>
+            
+                <label for="PublicationYear">Publication Year</label><br>
+                <input id="PublicationYear" type="text" name="PublicationYear"/><br>
+            
+                <label for="Isbn">ISBN</label><br>
+                <input id="Isbn" type="text" name="Isbn"/><br>
+                
+                <label for="FirstName">Author First Name</label><br>
+                <input id="FirstName" type="text" name="FirstName"/><br>
+                            
+                <label for="LastName">Author Last Name</label><br>
+                <input id="LastName" type="text" name="LastName"/><br>
+                
+                <input type="submit"/>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+@*TODO Make it clear request was successful or not*@
+@*TODO Can't add if author or title already exists *@
+@* TODO Fix Bug - After first submit always adds same thing *@
