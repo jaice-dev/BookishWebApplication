@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using BookishWebApplication.Models.View;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BookishWebApplication.Models;
-using BookishWebApplication.Models.View;
 
 namespace BookishWebApplication.Controllers
 {
@@ -19,19 +14,19 @@ namespace BookishWebApplication.Controllers
         {
             _logger = logger;
         }
-        
+
         [HttpGet("")]
         public IActionResult Index()
         {
             return View();
         }
-        
+
         [HttpGet("/privacy")]
         public IActionResult Privacy()
         {
             return View();
         }
-        
+
         [HttpGet("/error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

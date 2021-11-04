@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
 using Dapper;
@@ -39,11 +38,6 @@ namespace BookishWebApplication.Services
         
         public IEnumerable<Book> GetAllBooks()
         {
-            //Get the book
-            //Search in bookauthor
-            // if id is in bookauthor
-            // get fistname and last name
-            
             var getBooksQuery =
                 @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
             from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid
