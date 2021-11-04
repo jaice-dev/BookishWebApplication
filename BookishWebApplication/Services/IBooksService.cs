@@ -14,6 +14,7 @@ namespace BookishWebApplication.Services
         void CreateBook(CreateBookModel newBook);
         void CreateAuthor(CreateAuthorModel newAuthor);
         void CreateBookCopy(CreateBookCopyModel newCopy);
+        void AddAuthorToBook(CreateBookCopyModel newCopy);
 
     }
 
@@ -121,9 +122,20 @@ namespace BookishWebApplication.Services
             {
                 await connection.OpenAsync();
                 var sqlStatement =
-                    @"WITH book_key AS (INSERT INTO book (title) VALUES ('test') RETURNING id),
-                    author_key AS (INSERT INTO author (firstname, lastname) VALUES ('testfn', 'testln') RETURNING id)
-                    INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";
+                    "wdw";
+                await connection.ExecuteAsync(sqlStatement, newBook);
+            }
+        }
+        
+        public async void AddAuthorToBook(CreateBookCopyModel newBook)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+                var sqlStatement =
+                    @"WITH book_key AS (SELECT id from book where title = @Title),
+ author_key as (SELECT id from author WHERE (firstname = @FirstName AND lastname = @LastName)) 
+INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";
                 await connection.ExecuteAsync(sqlStatement, newBook);
             }
         }
@@ -132,6 +144,6 @@ namespace BookishWebApplication.Services
 }
 
 
-// @"WITH book_key AS (INSERT INTO book (title) VALUES ('test') RETURNING id),
+// @"WITH book_key AS (SELECT id from book (title) VALUES ('test') RETURNING id),
 //                     author_key AS (INSERT INTO author (firstname, lastname) VALUES ('testfn', 'testln') RETURNING id)
 //                     INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";

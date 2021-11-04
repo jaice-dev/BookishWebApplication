@@ -34,8 +34,8 @@ namespace BookishWebApplication.Controllers
             return View(viewModel);
         }
         
-        [HttpGet("edit")]
-        public IActionResult EditBooksPage()
+        [HttpGet("create")]
+        public IActionResult CreateBookAuthorPage()
         {
             return View();
         }
@@ -44,14 +44,43 @@ namespace BookishWebApplication.Controllers
         public IActionResult CreateBook(CreateBookModel newBook)
         {
             _booksService.CreateBook(newBook);
-            return RedirectToAction("ViewAllBooksPage");
+            return RedirectToAction("CreateBookAuthorPage");
         }
         
         [HttpPost("create/author")]
         public IActionResult CreateAuthor(CreateAuthorModel newAuthor)
         {
             _booksService.CreateAuthor(newAuthor);
-            return RedirectToAction("EditBooksPage");
+            return RedirectToAction("CreateBookAuthorPage");
         }
+        
+        [HttpGet("create/copy")]
+        public IActionResult CreateBookCopyPage()
+        {
+            return View();
+        }
+        
+        [HttpPost("create/copy")]
+        public IActionResult CreateBookCopy(CreateBookCopyModel newCopy)
+        {
+            _booksService.CreateBookCopy(newCopy);
+            return RedirectToAction("CreateBookCopyPage");
+        }
+        
+        [HttpGet("create/addAuthorToBook")]
+        public IActionResult AddAuthorToBookPage()
+        {
+            return View();
+        }
+        
+        [HttpPost("create/addAuthorToBook")]
+        public IActionResult AddAuthorToBook(CreateBookCopyModel newCopy)
+        {
+            _booksService.AddAuthorToBook(newCopy);
+            return RedirectToAction("AddAuthorToBookPage");
+        }
+        
+        
+        
     }
 }
