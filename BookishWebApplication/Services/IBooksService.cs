@@ -11,7 +11,9 @@ namespace BookishWebApplication.Services
     {
         IEnumerable<Book> GetAllBooks();
         IEnumerable<Book> SearchBooks(string query);
-        void CreateBook(CreateBookAuthorModel newBook);
+        void CreateBook(CreateBookModel newBook);
+        void CreateAuthor(CreateAuthorModel newAuthor);
+        void CreateBookCopy(CreateBookCopyModel newCopy);
 
     }
 
@@ -87,7 +89,33 @@ namespace BookishWebApplication.Services
             return countsByBookId;
         }
 
-        public async void CreateBook(CreateBookAuthorModel newBook)
+        public async void CreateBook(CreateBookModel newBook)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                if (newBook.PublicationYear == 0)
+                {
+                    newBook.PublicationYear = null;
+                }
+                await connection.OpenAsync();
+                var sqlStatement =
+                    @"INSERT INTO book (title, publicationyear, isbn) VALUES (@Title, @PublicationYear, @Isbn);";
+                await connection.ExecuteAsync(sqlStatement, newBook);
+            }
+        }
+        
+        public async void CreateAuthor(CreateAuthorModel newAuthor)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+                var sqlStatement =
+                    @"INSERT INTO author (firstname, lastname) VALUES (@FirstName, @LastName);";
+                await connection.ExecuteAsync(sqlStatement, newAuthor);
+            }
+        }
+        
+        public async void CreateBookCopy(CreateBookCopyModel newBook)
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
@@ -102,3 +130,8 @@ namespace BookishWebApplication.Services
         
     }
 }
+
+
+// @"WITH book_key AS (INSERT INTO book (title) VALUES ('test') RETURNING id),
+//                     author_key AS (INSERT INTO author (firstname, lastname) VALUES ('testfn', 'testln') RETURNING id)
+//                     INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";

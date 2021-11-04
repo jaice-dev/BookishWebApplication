@@ -40,11 +40,18 @@ namespace BookishWebApplication.Controllers
             return View();
         }
         
-        [HttpPost("create")]
-        public IActionResult CreateBook(CreateBookAuthorModel newBook)
+        [HttpPost("create/book")]
+        public IActionResult CreateBook(CreateBookModel newBook)
         {
             _booksService.CreateBook(newBook);
             return RedirectToAction("ViewAllBooksPage");
+        }
+        
+        [HttpPost("create/author")]
+        public IActionResult CreateAuthor(CreateAuthorModel newAuthor)
+        {
+            _booksService.CreateAuthor(newAuthor);
+            return RedirectToAction("EditBooksPage");
         }
     }
 }

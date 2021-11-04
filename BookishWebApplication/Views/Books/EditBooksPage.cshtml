@@ -8,10 +8,10 @@
     <h1 class="display-4">Edit Books</h1>
     
     <div class="post-form-container">
-        <form method = "post" action="/books/create">
+        <form method = "post" action="/books/create/book">
             <fieldset>
-                <legend>Create a Book</legend>
-                <label for="Title">Title</label><br/>
+                <legend>Create a Book (* is required)</legend>
+                <label for="Title">Title*</label><br/>
                 <input type="text" id="Title" name="Title" alt="book title input"/><br/>
             
                 <label for="PublicationYear">Publication Year</label><br>
@@ -20,18 +20,28 @@
                 <label for="Isbn">ISBN</label><br>
                 <input id="Isbn" type="text" name="Isbn"/><br>
                 
-                <label for="FirstName">Author First Name</label><br>
-                <input id="FirstName" type="text" name="FirstName"/><br>
-                            
-                <label for="LastName">Author Last Name</label><br>
-                <input id="LastName" type="text" name="LastName"/><br>
-                
                 <input type="submit"/>
             </fieldset>
         </form>
     </div>
+    <br/>
+    <div class="post-form-container">
+            <form method = "post" action="/books/create/author">
+                <fieldset>
+                    <legend>Create an Author (* is required)</legend>
+                    <label for="FirstName">First Name*</label><br/>
+                    <input type="text" id="FirstName" name="FirstName"/><br/>
+                
+                    <label for="LastName">Last Name*</label><br>
+                    <input id="LastName" type="text" name="LastName"/><br>
+                    
+                    <input type="submit"/>
+                </fieldset>
+            </form>
+        </div>
 </div>
 
 @*TODO Make it clear request was successful or not*@
 @*TODO Can't add if author or title already exists *@
 @* TODO Fix Bug - After first submit always adds same thing *@
+@* TODO Make create book and author separate? Probably want to make adding copies a separate method... *@
