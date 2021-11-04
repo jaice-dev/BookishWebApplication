@@ -36,6 +36,11 @@ namespace BookishWebApplication.Controllers
             var viewModel = new AuthorViewModel {Authors = author};
             return View(viewModel);
         }
+        [HttpGet("create")]
+        public IActionResult CreateAuthorPage()
+        {
+            return View();
+        }
         
         [HttpPost("create")]
         public IActionResult CreateAuthor(CreateAuthorModel newAuthor)
