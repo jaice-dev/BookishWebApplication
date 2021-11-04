@@ -26,6 +26,8 @@ namespace BookishWebApplication
         {
             services.AddControllersWithViews();
             services.AddTransient<IBooksService, BooksService>();
+            services.AddTransient<IAuthorService, AuthorService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

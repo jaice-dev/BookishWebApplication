@@ -1,0 +1,24 @@
+@model BookishWebApplication.Models.View.AuthorViewModel
+@{
+    ViewData["Title"] = "Author Page";
+}
+
+<div class="text-center">
+    
+    @{
+        <h1> Author Page</h1>
+        foreach (var author in Model.Authors)
+        {
+            if (author.FirstName != null)
+            {
+                <p>Author Id: @author.AuthorId</p>
+                <p>Author: @author.FirstName @author.LastName</p>
+            }
+            else
+            {
+                <p>Author: No authors added</p>
+            }
+         
+        }
+    }
+</div>

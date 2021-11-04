@@ -86,8 +86,7 @@ namespace BookishWebApplication.Controllers
             _booksService.AddAuthorToBook(newCopy);
             return RedirectToAction("AddAuthorToBookPage");
         }
-        
-        
-        
     }
 }
+
+//TODO When you add an author go to author page
