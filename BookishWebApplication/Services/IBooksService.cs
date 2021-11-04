@@ -11,7 +11,7 @@ namespace BookishWebApplication.Services
     {
         IEnumerable<Book> GetAllBooks();
         IEnumerable<Book> SearchBooks(string query);
-        Book GetBook(int id);
+        IEnumerable<Book> GetBook(int id);
         void CreateBook(CreateBookModel newBook);
         void CreateAuthor(CreateAuthorModel newAuthor);
         void CreateBookCopy(CreateBookCopyModel newCopy);
@@ -24,11 +24,16 @@ namespace BookishWebApplication.Services
         // private const string connectionString = "Server=guineapig.zoo.lan;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
         private const string ConnectionString = "Server=localhost;Port=5432;Database=bookishDB;Username=bookish;Password=softwire";
 
-        public Book GetBook(int searchId)
+        public IEnumerable<Book> GetBook(int searchId)
         {
-            using var connection = new NpgsqlConnection(ConnectionString);
-            var getBookSql = "SELECT * from book WHERE (id = @searchId);";
-            return new Book();
+            var searchParameters = new DynamicParameters(new {SearchId = searchId});
+            
+            var getBooksQuery =
+                @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
+            from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid
+            LEFT OUTER JOIN author on authorid = author.id where book.id = @SearchId;";
+            
+            return GetDatabaseBookResponse(getBooksQuery, searchParameters);
         }
         
         public IEnumerable<Book> GetAllBooks()
@@ -37,7 +42,7 @@ namespace BookishWebApplication.Services
             //Search in bookauthor
             // if id is in bookauthor
             // get fistname and last name
-
+            
             var getBooksQuery =
                 @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
             from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid

@@ -24,7 +24,7 @@
         foreach (var book in Model.Books)
         {
             <br/>
-            <p>Book: @book.Title</p>
+            <p>Book: <a asp-action="ViewBookPage" asp-route-id="@book.BookId">@book.Title</a></p>
 
             if (book.Authors.First() != null)
             {
