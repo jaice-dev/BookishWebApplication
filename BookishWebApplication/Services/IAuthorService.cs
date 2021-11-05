@@ -14,6 +14,7 @@ namespace BookishWebApplication.Services
         IEnumerable<Author> GetAllAuthors();
         Author GetAuthor(int id);
         int CreateAuthor(CreateAuthorModel newAuthor);
+        void DeleteAuthor(DeleteAuthorModel author);
 
     }
 
@@ -56,5 +57,18 @@ namespace BookishWebApplication.Services
                 return result;
             }
         }
+        
+        public async void DeleteAuthor(DeleteAuthorModel author)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var sqlStatement =
+                    @"DELETE FROM author where id = @AuthorId";
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, author);
+            }
+        }
+        
+        
     }
 }

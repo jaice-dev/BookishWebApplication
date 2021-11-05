@@ -14,10 +14,13 @@ namespace BookishWebApplication.Services
         IEnumerable<Book> SearchBooks(string query);
         Book GetBook(int id);
         int CreateBook(CreateBookModel newBook);
-        void CreateAuthor(CreateAuthorModel newAuthor);
         void CreateBookCopy(CreateBookCopyModel newCopy);
-        void AddAuthorToBook(BookAuthor bookAuthor);
+        void DeleteBookCopy(CreateBookCopyModel newCopy);
 
+        void AddAuthorToBook(BookAuthor bookAuthor);
+        void DeleteAuthorFromBook(BookAuthor bookAuthor);
+        void AddBookToAuthor(BookAuthor bookAuthor);
+        void RemoveBookFromAuthor(BookAuthor bookAuthor);
     }
 
     public class BooksService : IBooksService
@@ -66,8 +69,10 @@ namespace BookishWebApplication.Services
                 var searchParameters = new DynamicParameters(new {SearchTitle = "%" + searchString + "%"});
 
                 var searchBooksQuery =
-                    "SELECT book.id as bookId, title, publicationyear, isbn, author.id as authorId, firstname, lastname FROM bookauthor, book, author WHERE bookauthor.bookid = book.id AND bookauthor.authorid = author.id AND lower(title) LIKE lower(@SearchTitle)";
-
+                    @"SELECT book.id as bookId, title, publicationyear, isbn, authorid, firstname, lastname 
+                    from book LEFT OUTER JOIN bookauthor on book.id = bookauthor.bookid
+                    LEFT OUTER JOIN author on authorid = author.id WHERE (lower(title) LIKE lower(@SearchTitle));";
+                
                 return GetDatabaseBookResponse(searchBooksQuery, searchParameters);
             }
 
@@ -131,25 +136,27 @@ namespace BookishWebApplication.Services
                 return result;
             }
         }
-        
-        public async void CreateAuthor(CreateAuthorModel newAuthor)
-        {
-            using (var connection = new NpgsqlConnection(ConnectionString))
-            {
-                await connection.OpenAsync();
-                var sqlStatement =
-                    @"INSERT INTO author (firstname, lastname) VALUES (@FirstName, @LastName);";
-                await connection.ExecuteAsync(sqlStatement, newAuthor);
-            }
-        }
-        
+
         public async void CreateBookCopy(CreateBookCopyModel newBook)
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 await connection.OpenAsync();
                 var sqlStatement =
-                    "wdw";
+                    "INSERT INTO print (bookid) VALUES (@BookId)";
+                await connection.ExecuteAsync(sqlStatement, newBook);
+            }
+        }
+        
+        public async void DeleteBookCopy(CreateBookCopyModel newBook)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+                var sqlStatement =
+                    @"DELETE FROM print WHERE id IN (
+                        SELECT id FROM
+                        print WHERE bookid=@BookId LIMIT 1)";
                 await connection.ExecuteAsync(sqlStatement, newBook);
             }
         }
@@ -159,16 +166,46 @@ namespace BookishWebApplication.Services
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 var sqlStatement =
-                    @"INSERT INTO bookauthor (bookid, authorid) VALUES (@BookId, @AuthorId)";
-                
+                    @"INSERT INTO bookauthor (bookid, authorid) SELECT @BookId, @AuthorId WHERE NOT EXISTS (SELECT bookid, authorid FROM bookauthor WHERE (bookid = @BookId AND authorid = @AuthorId))";
                 await connection.OpenAsync();
                 await connection.ExecuteAsync(sqlStatement, bookAuthor);
             }
         }
         
+        public async void DeleteAuthorFromBook(BookAuthor bookAuthor)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var sqlStatement =
+                    @"DELETE FROM bookauthor where authorid = @AuthorId";
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, bookAuthor);
+            }
+        }
+        
+        public async void AddBookToAuthor(BookAuthor bookAuthor)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var sqlStatement =
+                    @"INSERT INTO bookauthor (bookid, authorid) SELECT @BookId, @AuthorId WHERE NOT EXISTS (SELECT bookid, authorid FROM bookauthor WHERE (bookid = @BookId AND authorid = @AuthorId))";
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, bookAuthor);
+            }
+        }
+
+        public async void RemoveBookFromAuthor(BookAuthor bookAuthor)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var sqlStatement =
+                    @"DELETE FROM bookauthor WHERE (bookid = @BookId AND authorid = @AuthorId)";
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, bookAuthor);
+            }
+        }
+        
+        
+        
     }
 }
-
-// @"WITH book_key AS (SELECT id from book where title = @Title),
-// author_key as (SELECT id from author WHERE (firstname = @FirstName AND lastname = @LastName)) 
-// INSERT INTO bookauthor (bookid, authorid) SELECT book_key.id, author_key.id FROM book_key, author_key";

@@ -4,6 +4,8 @@
 }
 
 <div class="text-center">
+    <h1 class="display-4">Books</h1>
+
     <form class="input-group mb-3" action="books/search">
         <input name="searchString" id="searchString" type="text" class="form-control" placeholder="Enter book title to search" aria-label="Enter book title to search" aria-describedby="basic-addon2">
         <div class="input-group-append">
@@ -12,13 +14,12 @@
     </form>
     <a asp-action="CreateBookPage">Create a Book</a>
     <br/>
-    <a asp-action="CreateBookCopyPage">Create a Copy of a book</a>
-    <br />
     <a asp-action="AddAuthorToBookPage">Add an author to a book</a>
-  
+    <br/>
+    <a asp-action="CreateBookCopyPage">Create a Copy of a book</a>
+    <br/>
+    <hr/>
     
-    <h1 class="display-4">Books</h1>
-
     @{
         foreach (var book in Model.Books)
         {
@@ -35,7 +36,9 @@
             }
             <p>Published: @(book.PublicationYear == 0 ? "Unknown" : book.PublicationYear)</p>
             <p>Copies available: @book.PrintCount</p>
+            <hr />
             <br/>
+            
         }
     }
 </div>

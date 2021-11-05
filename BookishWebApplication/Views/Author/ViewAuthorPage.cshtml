@@ -5,13 +5,80 @@
 
 <div class="text-center">
     <h1> Author Page</h1>
+    <h4><a asp-action="ViewAllAuthorsPage">View All Authors</a></h4>
+    <br/><hr/>
+
     @if (Model.Author.FirstName != null)
         {
-            <p>Id: @Model.Author.AuthorId</p>
-            <p>Name: @Model.Author.FirstName @Model.Author.LastName</p>
+            <h4>Id: @Model.Author.AuthorId</h4>
+            <h4>Name: @Model.Author.FirstName @Model.Author.LastName</h4>
         }
         else
         {
             <p>Author: No authors added</p>
         }
+    <hr/>
+
+    @{
+            foreach (var book in Model.BooksByAuthor)
+            {
+                <br/>
+                <p>Book: <a asp-controller="books" asp-action="ViewBookPage" asp-route-id="@book.BookId">@book.Title</a></p>
+    
+                if (book.Authors.First() != null)
+                {
+                    var allAuthorsOnBook = @Model.AllBooks.Single(b => b.Title.Equals(book.Title));
+                    
+                    <p>Author: @(String.Join(", ", allAuthorsOnBook.Authors.Select(author => author.FullName)))</p>
+                }
+                else
+                {
+                    <p>Author: No authors added</p>
+                }
+                <p>Published: @(book.PublicationYear == 0 ? "Unknown" : book.PublicationYear)</p>
+                <p>Copies available: @book.PrintCount</p>
+                <hr />
+                <br/>
+
+            }
+    }
+
+    @using (Html.BeginForm("AddBookToAuthor", "Author", FormMethod.Post))
+    {
+        <p>Add a book to this author?</p>
+        @Html.DropDownListFor(m => m.BookAuthor.BookId,
+            new SelectList(
+                Model.AllBooks, "BookId", "Title"
+                )
+            )
+        @Html.HiddenFor(m => m.BookAuthor.AuthorId)
+        <input type="submit" value="Submit"/>
+    }
+    <br/> <hr/>
+    
+    @using (Html.BeginForm("RemoveBookFromAuthor", "Author", FormMethod.Post))
+    {
+        <p>Remove a book from this author?</p>
+        @Html.DropDownListFor(m => m.BookAuthor.BookId,
+            new SelectList(
+                Model.BooksByAuthor, "BookId", "Title"
+                )
+            )
+        @Html.HiddenFor(m => m.BookAuthor.AuthorId)
+        <input type="submit" value="Submit"/>
+    }
+    <br/> <hr/>
+    
+    @if (!Model.BooksByAuthor.Any())
+    {
+        @using (Html.BeginForm("DeleteAuthor", "Author", FormMethod.Post))
+        {
+            <input id="AuthorId" name="AuthorId" type="hidden" value=@Model.Author.AuthorId />
+            <input type="submit" value="Delete Author?"/>
+        }
+    }
+    else
+    {
+        <p>(Cannot delete author if they are listed as author of a book)</p>
+    }
 </div>

@@ -2,10 +2,10 @@
 
 namespace BookishWebApplication.Models.Database.Create
 {
-    public class CreateBookCopyModel
+    public class DeleteAuthorModel
     {
         [Required]
-        public int BookId { get; set; }
+        public int AuthorId { get; set; }
 
     }
 }

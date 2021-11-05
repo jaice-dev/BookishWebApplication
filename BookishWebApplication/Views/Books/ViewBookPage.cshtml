@@ -6,6 +6,7 @@
 
 <div class="text-center">
     
+    <h3><a asp-action="ViewAllBooksPage">View All Books</a></h3>
 
     <br/>
     <p>Book: @Model.Book.Title</p>
@@ -20,18 +21,47 @@
     <p>Published: @(Model.Book.PublicationYear == 0 ? "Unknown" : Model.Book.PublicationYear)</p>
     <p>ISBN: @(Model.Book.Isbn == null ? "Unknown" : Model.Book.Isbn)</p>
     <p>Copies available: @Model.Book.PrintCount</p>
-    <br/>
+    <br/> <hr/>
 
 
     @using (Html.BeginForm("AddAuthorToBook", "Books", FormMethod.Post))
     {
+        <p>Add an author to book?</p>
         @Html.DropDownListFor(m => m.BookAuthor.AuthorId,
             new SelectList(
-                Model.AllAuthors, "AuthorId", "FullName"
+                Model.AllAuthors.ToList().Except(Model.Book.Authors), "AuthorId", "FullName"
                 )
             )
         @Html.HiddenFor(m => m.BookAuthor.BookId)
         <input type="submit" value="Submit"/>
+    }
+    <br/> <hr/>
+
+    
+    @using (Html.BeginForm("DeleteAuthorFromBook", "Books", FormMethod.Post))
+    {
+        <p>Remove an author from book?</p>
+        @Html.DropDownListFor(m => m.BookAuthor.AuthorId,
+            new SelectList(
+                Model.Book.Authors, "AuthorId", "FullName"
+                )
+            )
+        @Html.HiddenFor(m => m.BookAuthor.BookId)
+        <input type="submit" value="Submit"/>
+    }
+    <hr/>
+    
+    @using (Html.BeginForm("CreateBookCopy", "Books", FormMethod.Post))
+    {
+        <input id="BookId" name="BookId" type="hidden" value=@Model.Book.BookId />
+        <input type="submit" value="Add copy of book"/>
+    }
+    <hr/>
+
+    @using (Html.BeginForm("DeleteBookCopy", "Books", FormMethod.Post))
+    {
+        <input id="BookId" name="BookId" type="hidden" value=@Model.Book.BookId />
+        <input type="submit" value="Remove copy of book"/>
     }
     
     @* TODO make so you can't add same author twice *@

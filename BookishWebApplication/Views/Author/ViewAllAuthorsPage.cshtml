@@ -5,19 +5,23 @@
 
 <div class="text-center">
     <h1> Author Page</h1>
-    <a asp-action="CreateAuthorPage">Create an Author</a>
+    <h4><a asp-action="CreateAuthorPage">Create an Author</a></h4>
+    <br/>
+    <hr/>
 
     @{
         foreach (var author in Model.Authors)
         {
             if (author.FirstName != null)
             {
-                <p>Author: <a asp-action="ViewAuthorPage" asp-route-id="@author.AuthorId">@author.FullName</a></p>
+                <p>Author: <a asp-action="ViewAuthorPage" asp-route-authorId="@author.AuthorId">@author.FullName</a></p>
             }
             else
             {
                 <p>Author: No authors added</p>
             }
+            <br/>
+            <hr/>
         }
     }
 </div>

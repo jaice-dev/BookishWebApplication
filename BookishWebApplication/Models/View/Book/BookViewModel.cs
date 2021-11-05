@@ -9,5 +9,7 @@ namespace BookishWebApplication.Models.View
         public Book Book { get; set; }
         public IEnumerable<Author> AllAuthors { get; set; }
         public BookAuthor BookAuthor { get; set; }
+        public CreateBookCopyModel CreateCopy { get; set; }
+
     }
 }

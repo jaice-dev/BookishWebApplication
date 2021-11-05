@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using BookishWebApplication.Models.Database.Create;
 using BookishWebApplication.Models.View;
 using BookishWebApplication.Services;
@@ -24,7 +21,6 @@ namespace BookishWebApplication.Controllers
         public IActionResult ViewAllBooksPage()
         {
             var books = _booksService.GetAllBooks();
-            Console.WriteLine(books);
             var viewModel = new BooksViewModel {Books = books};
             
             return View(viewModel);
@@ -36,7 +32,8 @@ namespace BookishWebApplication.Controllers
             var book = _booksService.GetBook(id);
             var authors = _authorService.GetAllAuthors();
             var bookAuthor = new BookAuthor {BookId = book.BookId};
-            var viewModel = new BookViewModel {Book = book, AllAuthors = authors, BookAuthor = bookAuthor};
+            var createCopy = new CreateBookCopyModel() {BookId = book.BookId};
+            var viewModel = new BookViewModel {Book = book, AllAuthors = authors, BookAuthor = bookAuthor, CreateCopy = createCopy};
             return View(viewModel);
         }
 
@@ -73,7 +70,14 @@ namespace BookishWebApplication.Controllers
         public IActionResult CreateBookCopy(CreateBookCopyModel newCopy)
         {
             _booksService.CreateBookCopy(newCopy);
-            return RedirectToAction("CreateBookCopyPage");
+            return RedirectToAction("ViewBookPage", new { id = newCopy.BookId });
+        }
+        
+        [HttpPost("delete/copy")]
+        public IActionResult DeleteBookCopy(CreateBookCopyModel newCopy)
+        {
+            _booksService.DeleteBookCopy(newCopy);
+            return RedirectToAction("ViewBookPage", new { id = newCopy.BookId });
         }
         
         [HttpGet("create/addAuthorToBook")]
@@ -88,7 +92,12 @@ namespace BookishWebApplication.Controllers
             _booksService.AddAuthorToBook(bookAuthor);
             return RedirectToAction("ViewBookPage", new { id = bookAuthor.BookId });
         }
+        
+        [HttpPost("delete/deleteAuthorFromBook")]
+        public IActionResult DeleteAuthorFromBook(BookAuthor bookAuthor)
+        {
+            _booksService.DeleteAuthorFromBook(bookAuthor);
+            return RedirectToAction("ViewBookPage", new { id = bookAuthor.BookId });
+        }
     }
 }
-
-//TODO When you add an author go to author page
