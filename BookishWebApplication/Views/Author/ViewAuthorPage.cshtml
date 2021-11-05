@@ -46,9 +46,10 @@
     @using (Html.BeginForm("AddBookToAuthor", "Author", FormMethod.Post))
     {
         <p>Add a book to this author?</p>
+        var ids = Model.BooksByAuthor.Select(a => a.BookId).ToList();
         @Html.DropDownListFor(m => m.BookAuthor.BookId,
             new SelectList(
-                Model.AllBooks, "BookId", "Title"
+                Model.AllBooks.Where(a => !ids.Contains(a.BookId)), "BookId", "Title"
                 )
             )
         @Html.HiddenFor(m => m.BookAuthor.AuthorId)

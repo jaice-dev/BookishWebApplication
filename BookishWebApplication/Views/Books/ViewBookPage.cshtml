@@ -27,9 +27,17 @@
     @using (Html.BeginForm("AddAuthorToBook", "Books", FormMethod.Post))
     {
         <p>Add an author to book?</p>
+
+        List<int> ids = null;
+        if (Model.Book.Authors.First() != null)
+        {
+            ids = Model.Book.Authors.Select(a => a.AuthorId).ToList();
+        }
         @Html.DropDownListFor(m => m.BookAuthor.AuthorId,
             new SelectList(
-                Model.AllAuthors.ToList().Except(Model.Book.Authors), "AuthorId", "FullName"
+                ids == null ? Model.AllAuthors : Model.AllAuthors.Where(a => !ids.Contains(a.AuthorId)),
+                "AuthorId",
+                "FullName"
                 )
             )
         @Html.HiddenFor(m => m.BookAuthor.BookId)
@@ -37,18 +45,21 @@
     }
     <br/> <hr/>
 
-    
-    @using (Html.BeginForm("DeleteAuthorFromBook", "Books", FormMethod.Post))
+    @if (Model.Book.Authors.First() != null)
     {
-        <p>Remove an author from book?</p>
-        @Html.DropDownListFor(m => m.BookAuthor.AuthorId,
-            new SelectList(
-                Model.Book.Authors, "AuthorId", "FullName"
+        @using (Html.BeginForm("DeleteAuthorFromBook", "Books", FormMethod.Post))
+        {
+            <p>Remove an author from book?</p>
+            @Html.DropDownListFor(m => m.BookAuthor.AuthorId,
+                new SelectList(
+                    Model.Book.Authors, "AuthorId", "FullName"
+                    )
                 )
-            )
-        @Html.HiddenFor(m => m.BookAuthor.BookId)
-        <input type="submit" value="Submit"/>
+            @Html.HiddenFor(m => m.BookAuthor.BookId)
+            <input type="submit" value="Submit"/>
+        }
     }
+
     <hr/>
     
     @using (Html.BeginForm("CreateBookCopy", "Books", FormMethod.Post))
