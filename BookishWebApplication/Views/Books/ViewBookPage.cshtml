@@ -75,6 +75,19 @@
         <input type="submit" value="Remove copy of book"/>
     }
     
-    @* TODO make so you can't add same author twice *@
+    <hr/>
     
+    @if (Model.Book.PrintCount == 0)
+    {
+        @using (Html.BeginForm("DeleteBook", "books", FormMethod.Post))
+        {
+            <input id="BookId" name="BookId" type="hidden" value=@Model.Book.BookId />
+            <input type="submit" value="Delete Book?"/>
+        }
+    }
+    else
+    {
+        <p>(Cannot delete book if there are any copies)</p>
+    }
+
 </div>

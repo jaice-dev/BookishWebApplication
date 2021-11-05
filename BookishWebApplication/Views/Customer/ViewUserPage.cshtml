@@ -1,0 +1,24 @@
+﻿@model BookishWebApplication.Models.View.CustomerViewModel
+
+    @{
+    ViewData["Title"] = "User";
+}
+
+<div class="text-center">
+    <h1> User Page</h1>
+    <h4><a asp-action="ViewAllUsersPage">View all Users</a></h4>
+    <h4><a asp-action="EditUserPage" asp-route-userId="@Model.User.CustomerId">Edit User Details</a></h4>
+    <br/>
+    <hr/>
+
+    <p>User: @Model.User.FullName</p>
+    <p>Id: @Model.User.CustomerId</p>
+    <p>Address: @(Model.User.Address ?? "Unknown")</p>
+    <br/><hr/>
+    
+    @using (Html.BeginForm("DeleteUser", "customer", FormMethod.Post))
+            {
+                <input id="CustomerId" name="CustomerId" type="hidden" value=@Model.User.CustomerId />
+                <input type="submit" value="Delete User?"/>
+            }
+</div>

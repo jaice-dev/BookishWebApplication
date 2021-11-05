@@ -10,7 +10,6 @@ namespace BookishWebApplication.Services
 
     public interface IAuthorService
     {
-        // IEnumerable<Author> GetAuthor(int id);
         IEnumerable<Author> GetAllAuthors();
         Author GetAuthor(int id);
         int CreateAuthor(CreateAuthorModel newAuthor);

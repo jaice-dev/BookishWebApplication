@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
+using BookishWebApplication.Models.Database.Delete;
 using Dapper;
 using Npgsql;
 
@@ -14,6 +15,7 @@ namespace BookishWebApplication.Services
         IEnumerable<Book> SearchBooks(string query);
         Book GetBook(int id);
         int CreateBook(CreateBookModel newBook);
+        void DeleteBook(DeleteBookModel book);
         void CreateBookCopy(CreateBookCopyModel newCopy);
         void DeleteBookCopy(CreateBookCopyModel newCopy);
 
@@ -137,6 +139,17 @@ namespace BookishWebApplication.Services
             }
         }
 
+        public async void DeleteBook(DeleteBookModel book)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var sqlStatement =
+                    @"DELETE FROM book where (id = @BookId)";
+                await connection.OpenAsync();
+                await connection.ExecuteAsync(sqlStatement, book);
+            }
+        }
+
         public async void CreateBookCopy(CreateBookCopyModel newBook)
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
@@ -177,7 +190,7 @@ namespace BookishWebApplication.Services
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 var sqlStatement =
-                    @"DELETE FROM bookauthor where authorid = @AuthorId";
+                    @"DELETE FROM bookauthor where (authorid = @AuthorId AND bookid = @BookId)";
                 await connection.OpenAsync();
                 await connection.ExecuteAsync(sqlStatement, bookAuthor);
             }

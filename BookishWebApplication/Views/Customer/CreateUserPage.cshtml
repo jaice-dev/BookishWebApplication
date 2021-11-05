@@ -1,0 +1,29 @@
+﻿@model BookishWebApplication.Models.View.CustomersViewModel
+
+    @{
+    ViewData["Title"] = "All Users Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Create User</h1>
+    <h4><a asp-action="ViewAllUsersPage">View all users</a></h4>
+
+    
+    <div class="post-form-container">
+        <form method = "post" action="/users/create">
+            <fieldset>
+                <legend>Create a User (* is required)</legend>
+                <label for="FirstName">First Name*</label><br/>
+                <input type="text" id="FirstName" name="FirstName" alt="book title input"/><br/>
+            
+                <label for="LastName">Last Name*</label><br>
+                <input id="LastName" type="text" name="LastName"/><br>
+            
+                <label for="Address">Address</label><br>
+                <input id="Address" type="text" name="Address"/><br>
+                
+                <input type="submit"/>
+            </fieldset>
+        </form>
+    </div>
+</div>

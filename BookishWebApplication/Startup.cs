@@ -27,6 +27,7 @@ namespace BookishWebApplication
             services.AddControllersWithViews();
             services.AddTransient<IBooksService, BooksService>();
             services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<ICustomerService, CustomerService>();
 
         }
 

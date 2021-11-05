@@ -1,0 +1,22 @@
+﻿@model BookishWebApplication.Models.View.CustomersViewModel
+
+    @{
+    ViewData["Title"] = "All Users Page";
+}
+
+<div class="text-center">
+    <h1> All Users Page</h1>
+    <h4><a asp-action="CreateUserPage">Create a User</a></h4>
+    <br/>
+    <hr/>
+
+    @{
+    foreach (var user in Model.AllUsers)
+    {
+        <p>User: <a asp-action="ViewUserPage" asp-route-userId="@user.CustomerId">@user.FullName</a></p>
+        <p>Id: @user.CustomerId</p>
+        <p>Address: @(user.Address ?? "Unknown")</p>
+        <br/><hr/>
+    }
+}
+</div>

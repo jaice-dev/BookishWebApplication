@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using BookishWebApplication.Models.Database;
 using BookishWebApplication.Models.Database.Create;
+using BookishWebApplication.Models.Database.Delete;
 using BookishWebApplication.Models.View;
 using BookishWebApplication.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +60,13 @@ namespace BookishWebApplication.Controllers
         {
             var bookId =  _booksService.CreateBook(newBook);
             return RedirectToAction("ViewBookPage", new { id = bookId});
+        }
+        
+        [HttpPost("delete/book")]
+        public IActionResult DeleteBook(DeleteBookModel book)
+        {
+            _booksService.DeleteBook(book);
+            return RedirectToAction("ViewAllBooksPage");
         }
 
         [HttpGet("create/copy")]

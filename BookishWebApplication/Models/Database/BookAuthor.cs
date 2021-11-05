@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookishWebApplication.Models.Database.Create
+namespace BookishWebApplication.Models.Database
 {
     public class BookAuthor
     {

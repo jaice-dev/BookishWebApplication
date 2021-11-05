@@ -1,0 +1,36 @@
+﻿@model BookishWebApplication.Models.View.EditCustomerViewModel
+
+    @{
+    ViewData["Title"] = "All Users Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Edit User Details</h1>
+    <h4><a asp-action="ViewAllUsersPage">View all users</a></h4>
+
+
+    <div class="post-form-container">
+        <form method="post" action="/users/edit">
+            <fieldset>
+                <legend>Edit details for UserId: @Model.User.CustomerId</legend>
+                <label for="FirstName">First Name</label><br/>
+                <input type="text" id="FirstName" name="FirstName" value="@Model.User.FirstName"/><br/>
+
+                <label for="LastName">Last Name</label><br>
+                <input id="LastName" type="text" name="LastName" value="@Model.User.LastName"/><br>
+
+                <label for="Address">Address</label><br>
+                <input id="Address" type="text" name="Address" value="@Model.User.Address"/><br>
+
+                <input id="CustomerId" name="CustomerId" type="hidden" value="@Model.User.CustomerId"/>
+
+                <input type="submit"/>
+            </fieldset>
+        </form>
+    </div>
+    
+    @if (Model.Error)
+    {
+        <h4>First or Last name cannot be empty</h4>
+    }
+</div>
